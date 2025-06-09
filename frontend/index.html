@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Stock Trader AI</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>AI Stock Signal</h1>
+    <input type="text" id="ticker" placeholder="Enter ticker (e.g., aapl.us)">
+    <button onclick="getSignal()">Get Signal</button>
+    <button onclick="runBacktest()">Run Backtest</button>
+    <pre id="output"></pre>
+    <canvas id="stockChart" width="600" height="300"></canvas>
+    <canvas id="backtestChart" width="600" height="300"></canvas>
+
+    <script>
+        const API_BASE_URL = "http://localhost:8000";
+    
+        async function getSignal() {
+            try {
+                const ticker = document.getElementById("ticker").value;
+                const res = await fetch(`${API_BASE_URL}/predict/`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ ticker })
+                });
+    
+                const data = await res.json();
+                console.log("Prediction response:", data);
+    
+                if (data.detail) {
+                    document.getElementById("output").innerText = `Error: ${data.detail}`;
+                    return;
+                }
+    
+                document.getElementById("output").innerText =
+                    `Signal: ${data.action}\n` +
+                    `Q-values: Buy: ${data.q_values[0].toFixed(2)}, Sell: ${data.q_values[1].toFixed(2)}, Hold: ${data.q_values[2].toFixed(2)}`;
+    
+                renderChart(data.history);
+            } catch (err) {
+                console.error("Fetch error:", err);
+                document.getElementById("output").innerText = "Failed to fetch.";
+            }
+        }
+    
+        function renderChart(history) {
+            const ctx = document.getElementById("stockChart").getContext("2d");
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: history.map(d => d.time),
+                    datasets: [{
+                        label: "Close Price",
+                        data: history.map(d => d.close),
+                        borderColor: 'blue',
+                        tension: 0.1
+                    }]
+                }
+            });
+        }
+    
+        async function runBacktest() {
+            try {
+                const ticker = document.getElementById("ticker").value;
+                const res = await fetch(`${API_BASE_URL}/backtest/?ticker=${ticker}`);
+                const data = await res.json();
+                renderBacktest(data.equity_curve);
+            } catch (err) {
+                console.error("Backtest fetch error:", err);
+                document.getElementById("output").innerText = "Backtest failed.";
+            }
+        }
+    
+        function renderBacktest(equityData) {
+            const ctx = document.getElementById("backtestChart").getContext("2d");
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: equityData.map(p => p.time),
+                    datasets: [{
+                        label: "Equity Curve",
+                        data: equityData.map(p => p.equity),
+                        borderColor: 'green',
+                        tension: 0.1
+                    }]
+                }
+            });
+        }
+    </script>
+    
+</body>
+</html>
