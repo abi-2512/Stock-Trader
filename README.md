@@ -17,26 +17,6 @@ A lean, real-time stock trading reinforcement learning system that combines **LS
 
 ---
 
-## 📁 Project Structure
-
-```
-.
-├── backend/
-│   ├── main.py              # FastAPI entrypoint
-│   ├── trader.py            # Training and evaluation logic
-│   ├── environment.py       # StockTradingEnv (OpenAI Gym-style)
-│   ├── model.py             # LSTM-based DQN definition
-│   └── data_utils.py        # Stooq downloader + preprocessing
-├── frontend/
-│   ├── index.html           # Signal visualization UI
-│   └── script.js            # Fetches API and shows predictions/backtest
-├── train.py                 # CLI-based training script
-├── requirements.txt
-└── README.md
-```
-
----
-
 ## 🧠 Model Architecture
 
 ```python
