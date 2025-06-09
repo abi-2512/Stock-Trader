@@ -7,6 +7,15 @@ A lean, real-time stock trading reinforcement learning system that combines **LS
 
 ---
 
+## 🌐 Live Demo
+
+- **Frontend**: [Frontend](https://stockbroker-z8np.onrender.com)
+- **Backend API**: [Backend](https://stocktrader-ym0x.onrender.com)
+
+> ⚠️ May take ~60s on first load due to cold start on CPU. I highly suggest running it locally.
+
+---
+
 ## 🚀 Features
 
 * 🧠 **DQN with LSTM**: Captures temporal price patterns using RNN memory.
