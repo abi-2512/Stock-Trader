@@ -97,7 +97,6 @@ Step 2: Action Hold, Reward +0.89, Net Worth: $16,657.72
 ## 🧠 Credit
 
 * Built using: PyTorch, FastAPI, Stooq, OpenAI Gym
-* Inspired by AlphaZero-style clean architecture
 
 ---
 
